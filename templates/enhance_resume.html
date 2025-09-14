@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhance Resume</title>
+    <style>
+        /* Reset defaults */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4A90E2, #50E3C2);
+            padding: 2rem;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        form div {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        button {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        h2,
+        h3 {
+            margin-top: 1.5rem;
+            color: #333;
+        }
+
+        ul {
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .pre-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        pre {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #357ABD;
+        }
+
+        .copy-success {
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: green;
+            display: none;
+        }
+
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Resume Enhancement</h1>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            <div>
+                <label for="resume_text">Resume Text:</label><br>
+                <textarea name="resume_text" rows="10" required></textarea>
+            </div>
+
+            <div>
+                <label for="job_description">Job Description:</label><br>
+                <textarea name="job_description" rows="5" required></textarea>
+            </div>
+            <div class="btn">
+                <button type="submit">Enhance Resume</button>
+            </div>
+        </form>
+
+        {% if enhanced_resume %}
+        <h2>Results:</h2>
+        <h3>ATS Score: {{ ats_score }}%</h3>
+        <h3>Enhanced ATS Score: {{ ats_score_enhanced }}%</h3>
+        <h3>Missing Keywords:</h3>
+        <ul>
+            {% for keyword in top_missing_keywords %}
+            <li>{{ keyword }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Enhanced Resume:</h3>
+        <div class="pre-wrapper">
+            <span class="copy-success" id="copy-success">Copied!</span>
+            <button class="copy-btn" type="button" onclick="copyResume()">Copy</button>
+            <pre id="enhanced-resume">{{ enhanced_resume }}</pre>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function copyResume() {
+            const resumeText = document.getElementById("enhanced-resume").innerText;
+            navigator.clipboard.writeText(resumeText).then(() => {
+                const successMsg = document.getElementById("copy-success");
+                successMsg.style.display = "inline";
+                setTimeout(() => successMsg.style.display = "none", 1500);
+            }).catch(() => alert("Failed to copy text."));
+        }
+    </script>
+</body>
+
+</html>
